@@ -1,51 +1,43 @@
 import os
 import openai
-from pydantic import BaseModel
-from typing import List
-from langchain.embeddings import OpenAIEmbeddings, sentence_transformer
+import loguru
+from enum import Enum
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.embeddings.sentence_transformer import SentenceTransformerEmbeddings
 from dotenv import load_dotenv
+from src.selector import BaseSelector
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 load_dotenv()
 
-
-class Embedding(BaseModel):
-    index: int
-    model: str
+logger = loguru.logger
 
 
-class Mapping(BaseModel):
-    index: int
-    name: str
+class EmbeddingOptions(Enum):
+    OPENAI_EMBEDDINGS: OpenAIEmbeddings
+    SENTENCE_TRANSFORMERS_EMBEDDING: SentenceTransformerEmbeddings
 
 
-class EmbeddingSelector:
-    def __init__(self):
-        self.embedding: Embedding
-        self.embedding_list: List[Embedding] = []
-        self.embedding_map = {}
-        self.index_map = {}
-
-    def select_embedding(self, name):
-        index = len(self.embedding_list)
-        self.embedding = Embedding(index=index, model=name)
-
-    def get_embedding_maps(self):
-        return self.embedding_map, self.index_map
+class EmbeddingSelector(BaseSelector):
+    def __init__(self, default_embedding=EmbeddingOptions.OPENAI_EMBEDDINGS):
+        super().__init__()
+        self.embedding = default_embedding
+        logger.info("Initializing EmbeddingSelector")
+        self.openai_embeddings = EmbeddingOptions.OPENAI_EMBEDDINGS
+        self.sent_trans_embeddings = EmbeddingOptions.SENTENCE_TRANSFORMERS_EMBEDDING
+        self.initialize_maps(list(EmbeddingOptions))
 
     def get_openai_embeddings(self):
-        self.openai_embeddings = OpenAIEmbeddings(
-            client=openai,
-            model="text-embedding-ada-002",
-            show_progress_bar=True,
-            tiktoken_model_name="t5-small",
-            chunk_size=256,
-        )
-        return self.openai_embeddings
+        logger.info("Getting OpenAI Embeddings")
+        self.openai_embeddings.openai_api_key = os.environ.get("OPENAI_API_KEY")
+        self.openai_embeddings.model = "text-embedding-ada-002"
+        self.openai_embeddings.show_progress_bar = True
+        self.openai_embeddings.request_timeout = 60
+        return self.select("openai_embeddings")
 
-    def get_sentence_transformer_embeddings(self):
-        self.sent_trans_embeddings = (
-            sentence_transformer.SentenceTransformerEmbeddings()
-        )
-        return self.sent_trans_embeddings
+    def sentence_transformer_embeddings(self):
+        logger.info("Getting Sentence Transformer Embeddings")
+        self.sent_trans_embeddings.show_progress_bar = True
+        self.sent_trans_embeddings.request_timeout = 60
+        return self.select("sentence_transformer_embeddings")

@@ -1,0 +1,4 @@
+%00.Coding%01projects%dataset_generator
+.venv
+__pycache__
+.env
