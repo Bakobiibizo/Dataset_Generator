@@ -6,11 +6,13 @@ from data_models import Data, data_map
 
 st.title("Data Collection")
 
-main_container = st.container()
+download_file_path = ""
 
-st.header("Select a target Location local or url")
-local_file = main_container.file_uploader("Upload your data")
-url = main_container.text_input("Enter target location:")
+with st.sidebar:
+    sidebar_container = st.container()
+url = sidebar_container.text_input("Enter target URL:")
+local_file = sidebar_container.file_uploader("or Upload your data")
+
 
 options = [
     Data.PDF.value,
@@ -23,7 +25,7 @@ options = [
     Data.URL.value,
 ]
 
-data_type = main_container.selectbox(
+data_type = sidebar_container.selectbox(
     label="Data Type",
     options=options,
     key="Data Type",
@@ -32,7 +34,7 @@ data_type = main_container.selectbox(
 )
 if not data_type:
     data_type = options[0]
-if main_container.button("Submit"):
+if sidebar_container.button("Submit"):
     file_path = ""
     for i, _ in enumerate(os.listdir("tmp")):
         print(i)
@@ -45,3 +47,12 @@ if main_container.button("Submit"):
     collection_function = data_map[data_type]
     data = collection_function(file_path, url)
     print(data)
+
+st.sidebar.download_button(
+    label="Download File",
+    file_name=download_file_path,
+    data=json.dumps(download_file_path),
+)
+
+main_container = st.container()
+main_container.write()
