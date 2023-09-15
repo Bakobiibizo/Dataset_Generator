@@ -11,11 +11,11 @@ from langchain.document_transformers import (
     EmbeddingsRedundantFilter,
 )
 from typing import List
-from src.embeddings import EmbeddingSelector, EmbeddingOptions
-from src.retrivers import RetrieverSelector, RetrieverOptions
-from src.splitters import SplitterSelector, SplitterOptions
-from src.loaders import LoaderSelector, LoaderOptions
-from src.selector import BaseSelector
+from vectordb.embeddings import EmbeddingSelector, EmbeddingOptions
+from vectordb.retrivers import RetrieverSelector, RetrieverOptions
+from vectordb.splitters import SplitterSelector, SplitterOptions
+from vectordb.loaders import LoaderSelector, LoaderOptions
+from vectordb.selector import BaseSelector
 
 
 logger = loguru.logger

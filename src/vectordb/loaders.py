@@ -8,7 +8,7 @@ from langchain.document_loaders import (
 )
 from enum import Enum
 from loguru import logger
-from src.selector import BaseSelector
+from vectordb.selector import BaseSelector
 
 
 class LoaderOptions(Enum):

@@ -5,7 +5,7 @@ from langchain.retrievers import (
 )
 from enum import Enum
 import loguru
-from src.selector import BaseSelector
+from vectordb.selector import BaseSelector
 
 logger = loguru.logger
 

@@ -9,7 +9,7 @@ from langchain.text_splitter import (
     TokenTextSplitter,
 )
 from enum import Enum
-from src.selector import BaseSelector
+from vectordb.selector import BaseSelector
 import loguru
 
 logger = loguru.logger

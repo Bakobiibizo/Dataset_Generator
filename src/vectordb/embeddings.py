@@ -5,7 +5,7 @@ from enum import Enum
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.embeddings.sentence_transformer import SentenceTransformerEmbeddings
 from dotenv import load_dotenv
-from src.selector import BaseSelector
+from selector import BaseSelector
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
