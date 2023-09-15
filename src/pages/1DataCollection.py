@@ -32,6 +32,9 @@ data_type = sidebar_container.selectbox(
     placeholder=options[0],
     index=0,
 )
+main_container = st.container()
+main_container.write()
+download_path = st.text_area
 if not data_type:
     data_type = options[0]
 if sidebar_container.button("Submit"):
@@ -46,6 +49,9 @@ if sidebar_container.button("Submit"):
 
     collection_function = data_map[data_type]
     data = collection_function(file_path, url)
+    main_container.write(data)
+    download_file_path = file_path
+    download_path.write(file_path)
     print(data)
 
 st.sidebar.download_button(
@@ -54,5 +60,6 @@ st.sidebar.download_button(
     data=json.dumps(download_file_path),
 )
 
-main_container = st.container()
-main_container.write()
+
+def get_download_path():
+    return download_path
