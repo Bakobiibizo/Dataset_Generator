@@ -9,11 +9,14 @@ load_dotenv()
 
 
 def run_clarifai(
-    workflow_id: Optional[str] = "cohere-summarize-workflow-88z5zr",
-    text_file_url: Optional[
-        str
-    ] = "https://samples.clarifai.com/negative_sentence_12.txt",
+    workflow_id: Optional[str],
+    text_file_url: Optional[str],
 ):
+    if not workflow_id:
+        workflow_id = "cohere-summarize-workflow-88z5zr"
+    if not text_file_url:
+        text_file_url = "src/tmp/input.txt"
+
     pat = os.getenv("PAT")
     user_id = os.getenv("USER_ID")
     app_id = os.getenv("APP_ID")
@@ -21,8 +24,12 @@ def run_clarifai(
     stub = service_pb2_grpc.V2Stub(channel)
 
     metadata = (("authorization", f"Key {pat}"),)
+    if not user_id:
+        raise ValueError("User ID is required")
+    if not app_id:
+        raise ValueError("App ID is required")
 
-    userDataObject = resources_pb2.UserAppIDSet(user_id, app_id)
+    userDataObject = resources_pb2.UserAppIDSet(user_id=user_id, app_id=app_id)
 
     post_workflow_results_response = stub.PostWorkflowResults(
         service_pb2.PostWorkflowResultsRequest(
@@ -56,3 +63,14 @@ def run_clarifai(
 
     # Uncomment this line to print the full Response JSON
     # print(results)
+    result = results.to_json()
+    with open("src/tmp/output.json", "w", encoding="utf-8") as f:
+        f.write(result)
+    return results
+
+
+if __name__ == "__main__":
+    run_clarifai(
+        workflow_id="cohere-summarize-workflow-88z5zr",
+        text_file_url="src/tmp/input.txt",
+    )

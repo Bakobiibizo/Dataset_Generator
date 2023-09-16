@@ -4,7 +4,7 @@ import requests
 from data_models import PersonaRequest
 from typing import Tuple
 
-API_URL = "http://localhost:8000/"
+API_URL = "http://localhost:8555/"
 
 logger = loguru.logger
 
