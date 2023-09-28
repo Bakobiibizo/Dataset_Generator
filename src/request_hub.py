@@ -48,10 +48,8 @@ def run_PY(local_file: Optional[str] = None, url: Optional[str] = None):
 def run_URL(local_file: Optional[str] = None, url: Optional[str] = None):
     if not local_file:
         local_file = None
-    raw_data = call_scraper(url)
-    return raw_data
+    return call_scraper(url)
 
 
 def run_compression(data):
-    compressed_data = requestion_text_compression(data)
-    return compressed_data
+    return requestion_text_compression(data)
