@@ -57,7 +57,7 @@ def run_clarifai(
     for output in results.outputs:
         model = output.model
 
-        print("Predicted concepts for the model `%s`" % model.id)
+        print(f"Predicted concepts for the model `{model.id}`")
         for concept in output.data.concepts:
             print("	%s %.2f" % (concept.name, concept.value))
 

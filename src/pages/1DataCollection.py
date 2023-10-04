@@ -51,7 +51,7 @@ if sidebar_container.button("Submit"):
     data = collection_function(file_path, url)
     main_container.write(data)
     download_file_path = file_path
-    download_path.write(file_path)
+    download_path.write(download_file_path)
     print(data)
 
 st.sidebar.download_button(
